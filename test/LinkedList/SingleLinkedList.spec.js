@@ -33,11 +33,25 @@ function test_SingleLinkedList() {
     describe("2. <find> 테스트", () => {
       const singleList = new SingleLinkedList();
 
-      singleList.append(1);
-      singleList.append(2);
-      singleList.append(3);
+      describe("비어있는 리스트에서 1을 찾는다.", () => {
+        should(singleList.find(1), undefined);
+      });
 
-      should(singleList.find(100), undefined);
+      describe("1을 추가한 후 1을 찾는다.", () => {
+        singleList.append(1);
+        should(singleList.find(1), true);
+      });
+
+      describe("2, 3을 추가한 후 3을 찾는다.", () => {
+        singleList.append(2);
+        singleList.append(3);
+        should(singleList.find(3), true);
+        console.log(singleList.display);
+      });
+
+      describe("100을 찾는다. (존재하지 않는 값)", () => {
+        should(singleList.find(100), undefined);
+      });
     });
 
     describe("3. <insert> 테스트", () => {
