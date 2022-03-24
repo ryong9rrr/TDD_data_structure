@@ -47,7 +47,7 @@ class SingleLinkedList extends LinkedList {
       this.head = newNode;
       this.tail = newNode;
       this.increase();
-      return;
+      return true;
     }
 
     // 연결리스트가 비어있지 않다면 tail에 Node를 추가
@@ -56,37 +56,43 @@ class SingleLinkedList extends LinkedList {
       this.tail.next = newNode;
       this.tail = newNode;
       this.increase();
-      return;
+      return true;
     }
-    // 그 외의 경우라면 Error
+    // 그 외의 경우라면 Error, 이건 로직상의 문제니 throw
     throw new Error("노드를 추가하는 곳에서 에러가 발생했어요.");
   }
 
   insert(node, newValue) {
-    if (!node) throw new Error("해당하는 노드를 찾을 수 없어요.");
+    //if (!node) throw new Error("해당하는 노드를 찾을 수 없어요.");
+    if (!node) return false;
     const newNode = new Node(newValue);
     newNode.next = node.next;
     node.next = newNode;
     this.increase();
+    return true;
   }
 
   remove(value) {
     // 여기서 size까지 사용하는 것이 좋은지?
-    if (this.head === null && this.size === 0)
-      throw new Error("노드가 이미 비어있어서 제거할 노드가 없어요.");
+    if (this.head === null && this.size === 0) {
+      //throw new Error("노드가 이미 비어있어서 제거할 노드가 없어요.");
+      return false;
+    }
 
     let prevNode = this.head;
+
     while (prevNode.next && prevNode.next.value !== value) {
       prevNode = prevNode.next;
     }
 
-    if (prevNode.next) {
+    if (prevNode && prevNode.next) {
       prevNode.next = prevNode.next.next;
       this.decrease();
-      return;
+      return true;
     }
 
-    throw new Error("해당하는 값을 가지는 노드가 없어요.");
+    //throw new Error("해당하는 값을 가지는 노드가 없어요.");
+    return false;
   }
 }
 
