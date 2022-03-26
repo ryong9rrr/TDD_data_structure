@@ -7,19 +7,19 @@ class Node {
 
 class Stack {
   constructor() {
-    this.last = null;
+    this.top = null;
     this.size = 0;
   }
 
-  push(value) {
-    this.last = new Node(value, this.last);
+  push(newValue) {
+    this.top = new Node(newValue, this.top);
     this.size++;
   }
 
   pop() {
-    if (!this.last) return null;
-    const extracted = this.last.value;
-    this.last = this.last.next;
+    if (!this.top) return null;
+    const extracted = this.top.value;
+    this.top = this.top.next;
     this.size--;
     return extracted;
   }
