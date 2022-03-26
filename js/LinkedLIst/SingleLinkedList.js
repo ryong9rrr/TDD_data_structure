@@ -44,10 +44,10 @@ class SingleLinkedList {
   }
 
   //연결리스트에서 value에 해당하는 첫번째 노드를 반환합니다.
+  //만약 그런 요소가 없다면 undefined을 반환합니다.
   find(value) {
     if (!this.head) {
-      console.error("빈 리스트에서 find를 할 수 없어요");
-      return -1;
+      return undefined;
     }
 
     let node = this.head;
@@ -56,8 +56,7 @@ class SingleLinkedList {
       else node = node.next;
     }
 
-    console.error("존재하지 않는 값이에요");
-    return -1;
+    return undefined;
   }
 
   append(newValue) {
@@ -71,42 +70,39 @@ class SingleLinkedList {
       node.next = new Node(newValue);
     }
     this.increase();
+    return true;
   }
 
   remove(value) {
-    if (!this.head) {
-      console.error("빈 리스트에 remove를 할 수 없어요.");
-      return -1;
-    }
+    if (!this.head) return false;
 
     if (this.head.value === value) {
       this.head = this.head.next;
       this.decrease();
-    } else {
-      let node = this.head;
-      while (node.next) {
-        if (node.next.value === value) {
-          node.next = node.next.next;
-          this.decrease();
-          return;
-        }
-        node = node.next;
-      }
-      console.error("존재하지 않는 값이에요.");
-      return -1;
+      return true;
     }
+
+    let node = this.head;
+    while (node.next) {
+      if (node.next.value === value) {
+        node.next = node.next.next;
+        this.decrease();
+        return true;
+      }
+      node = node.next;
+    }
+
+    return false;
   }
 
   insert(node, newValue) {
-    if (!node || node < 0) {
-      console.error("존재하지 않는 노드에요");
-      return -1;
-    }
+    if (!node) return false;
 
     const newNode = new Node(newValue);
     newNode.next = node.next;
     node.next = newNode;
     this.increase();
+    return true;
   }
 }
 

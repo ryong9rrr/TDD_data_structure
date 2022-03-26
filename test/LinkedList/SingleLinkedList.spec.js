@@ -20,7 +20,7 @@ function test_SingleLinkedList() {
       const singleList = new SingleLinkedList();
 
       describe("비어있는 리스트에서 1을 찾는다.", () => {
-        should(singleList.find(1), -1);
+        should(singleList.find(1), undefined);
       });
 
       describe("1을 추가한 후 1을 찾는다.", () => {
@@ -37,7 +37,7 @@ function test_SingleLinkedList() {
       });
 
       describe("100을 찾는다. (존재하지 않는 값)", () => {
-        should(singleList.find(100), -1);
+        should(singleList.find(100), undefined);
       });
     });
 
@@ -45,7 +45,7 @@ function test_SingleLinkedList() {
       const singleList = new SingleLinkedList();
 
       describe("빈 리스트에서 remove", () => {
-        should(singleList.remove(1), -1);
+        should(singleList.remove(1), false);
       });
 
       singleList.append(4);
@@ -60,7 +60,7 @@ function test_SingleLinkedList() {
       });
 
       describe("존재하지 않는 100을 지운다.", () => {
-        should(singleList.remove(100), -1);
+        singleList.remove(100);
         should(singleList.size, 3);
         should(singleList.display, "[1, 2, 3]");
       });
@@ -86,7 +86,7 @@ function test_SingleLinkedList() {
 
       describe("4를 100 뒤에 넣는다. (100은 존재하지 않음)", () => {
         const targetNode = singleList.find(100);
-        should(singleList.insert(targetNode, 4), -1);
+        singleList.insert(targetNode, 4);
         should(singleList.size, 3);
         should(singleList.display, "[1, 2, 3]");
       });
