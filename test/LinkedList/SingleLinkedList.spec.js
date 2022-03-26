@@ -1,17 +1,5 @@
-const { describe, should } = require("../common.js");
+const { describe, should } = require("../../.bin/common.js");
 const SingleLinkedList = require("../../js/LinkedList/SingleLinkedList.js");
-
-function temp() {
-  console.log(singleList.display);
-
-  // singleList.remove(singleList.find(100)) -> 해당하는 값을 가지는 노드가 없어요.
-
-  // 노드가 비어있는데 remove 하는 경우
-
-  // 굳이 size를 비교해줘야할까? (비교해주면 혹시 모를 로직 에러를 찾아낼 수 있을 것 같은데....)
-
-  // 테스트 코드 작성해야할듯?
-}
 
 function test_SingleLinkedList() {
   describe("<싱글연결리스트 테스트>", () => {
@@ -23,9 +11,7 @@ function test_SingleLinkedList() {
         singleList.append(2);
         singleList.append(3);
 
-        // size는 3
         should(singleList.size, 3);
-        // 출력
         should(singleList.display, "[1, 2, 3]");
       });
     });
@@ -34,45 +20,34 @@ function test_SingleLinkedList() {
       const singleList = new SingleLinkedList();
 
       describe("비어있는 리스트에서 1을 찾는다.", () => {
-        should(singleList.find(1), undefined);
+        should(singleList.find(1), -1);
       });
 
       describe("1을 추가한 후 1을 찾는다.", () => {
         singleList.append(1);
-        should(singleList.find(1), true);
+        const targetNode = singleList.find(1);
+        should(targetNode.value, 1);
       });
 
       describe("2, 3을 추가한 후 3을 찾는다.", () => {
         singleList.append(2);
         singleList.append(3);
-        should(singleList.find(3), true);
-        console.log(singleList.display);
+        const targetNode = singleList.find(3);
+        should(targetNode.value, 3);
       });
 
       describe("100을 찾는다. (존재하지 않는 값)", () => {
-        should(singleList.find(100), undefined);
+        should(singleList.find(100), -1);
       });
     });
 
-    describe("3. <insert> 테스트", () => {
+    describe("3. <remove> 테스트", () => {
       const singleList = new SingleLinkedList();
-      singleList.append(1);
-      singleList.append(2);
-      singleList.append(3);
 
-      describe("4를 2 뒤에 넣는다.", () => {
-        singleList.insert(singleList.find(2), 4);
-        should(singleList.display, "[1, 2, 4, 3]");
+      describe("빈 리스트에서 remove", () => {
+        should(singleList.remove(1), -1);
       });
 
-      describe("4를 100 뒤에 넣는다. (100은 존재하지 않음)", () => {
-        should(singleList.insert(singleList.find(100), 4), false);
-        should(singleList.display, "[1, 2, 4, 3]");
-      });
-    });
-
-    describe("4. <remove> 테스트", () => {
-      const singleList = new SingleLinkedList();
       singleList.append(4);
       singleList.append(1);
       singleList.append(2);
@@ -80,18 +55,59 @@ function test_SingleLinkedList() {
 
       describe("4를 지운다.", () => {
         singleList.remove(4);
+        should(singleList.size, 3);
         should(singleList.display, "[1, 2, 3]");
       });
 
-      describe("100을 지운다. (100은 존재하지 않음)", () => {
-        should(singleList.remove(100), false);
+      describe("존재하지 않는 100을 지운다.", () => {
+        should(singleList.remove(100), -1);
+        should(singleList.size, 3);
         should(singleList.display, "[1, 2, 3]");
       });
 
-      describe("노드가 비어있는데 remove를 하는 경우", () => {
+      describe("2를 지운다.", () => {
+        singleList.remove(2);
+        should(singleList.size, 2);
+        should(singleList.display, "[1, 3]");
+      });
+
+      describe("3을 지운다.", () => {
+        singleList.remove(3);
+        should(singleList.size, 1);
+        should(singleList.display, "[1]");
+      });
+    });
+
+    describe("4. <insert> 테스트", () => {
+      const singleList = new SingleLinkedList();
+      singleList.append(1);
+      singleList.append(2);
+      singleList.append(3);
+
+      describe("4를 100 뒤에 넣는다. (100은 존재하지 않음)", () => {
+        const targetNode = singleList.find(100);
+        should(singleList.insert(targetNode, 4), -1);
+        should(singleList.size, 3);
         should(singleList.display, "[1, 2, 3]");
-        should(singleList.remove(1), true);
-        console.log(singleList.display);
+      });
+
+      describe("4를 2 뒤에 넣는다.", () => {
+        const targetNode = singleList.find(2);
+        singleList.insert(targetNode, 4);
+        should(singleList.size, 4);
+        should(singleList.display, "[1, 2, 4, 3]");
+      });
+
+      describe("-1을 3 뒤에 넣는다.", () => {
+        singleList.insert(singleList.find(3), -1);
+        should(singleList.size, 5);
+        should(singleList.display, "[1, 2, 4, 3, -1]");
+      });
+
+      describe("-2를 -1 뒤에 넣는다.", () => {
+        singleList.insert(singleList.find(-1), -2);
+        should(singleList.size, 6);
+        should(singleList.display, "[1, 2, 4, 3, -1, -2]");
       });
     });
   });

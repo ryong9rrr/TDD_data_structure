@@ -1,10 +1,31 @@
-const { LinkedList, Node } = require("./core.js");
+class Node {
+  constructor(value) {
+    this.value = value;
+    this.next = null;
+  }
+}
 
-class SingleLinkedList extends LinkedList {
+class SingleLinkedList {
+  #size;
   constructor() {
-    super();
+    this.#size = 0;
     this.head = null;
-    this.tail = null;
+  }
+
+  get size() {
+    return this.#size;
+  }
+
+  increase() {
+    this.#size++;
+  }
+
+  decrease() {
+    // 혹시모를 로직 에러에 대비한 코드
+    if (this.#size === 0) {
+      throw new Error("size가 0이라서 더이상 감소시킬 수 없어요.");
+    }
+    this.#size--;
   }
 
   // 연결리스트를 문자열 형태로 보여줍니다.
@@ -22,77 +43,70 @@ class SingleLinkedList extends LinkedList {
     return strings;
   }
 
-  // 연결리스트에서 value에 해당하는 첫번째 노드를 반환합니다.
+  //연결리스트에서 value에 해당하는 첫번째 노드를 반환합니다.
   find(value) {
-    // 노드가 비어있다면
-    // 여기서 size까지 사용하는 것이 좋은지?
-    if (this.head === null && this.size === 0) {
-      return undefined;
+    if (!this.head) {
+      console.error("빈 리스트에서 find를 할 수 없어요");
+      return -1;
     }
 
-    let currentNode = this.head;
-    while (currentNode && currentNode.value !== value) {
-      currentNode = currentNode.next;
+    let node = this.head;
+    while (node) {
+      if (node.value === value) return node;
+      else node = node.next;
     }
 
-    // 해당하는 값이 있으면 반환하고 없으면 undefined
-    return currentNode || undefined;
+    console.error("존재하지 않는 값이에요");
+    return -1;
   }
 
   append(newValue) {
-    const newNode = new Node(newValue);
-    // 연결리스트가 비어있는 경우
-    // 여기서 size까지 사용하는 것이 좋은지?
-    if (this.head === null && this.tail === null && this.size === 0) {
-      this.head = newNode;
-      this.tail = newNode;
-      this.increase();
-      return true;
+    if (!this.head) {
+      this.head = new Node(newValue);
+    } else {
+      let node = this.head;
+      while (node.next) {
+        node = node.next;
+      }
+      node.next = new Node(newValue);
+    }
+    this.increase();
+  }
+
+  remove(value) {
+    if (!this.head) {
+      console.error("빈 리스트에 remove를 할 수 없어요.");
+      return -1;
     }
 
-    // 연결리스트가 비어있지 않다면 tail에 Node를 추가
-    // 여기서 size까지 사용하는 것이 좋은지?
-    if (this.head && this.tail.next === null && this.size > 0) {
-      this.tail.next = newNode;
-      this.tail = newNode;
-      this.increase();
-      return true;
+    if (this.head.value === value) {
+      this.head = this.head.next;
+      this.decrease();
+    } else {
+      let node = this.head;
+      while (node.next) {
+        if (node.next.value === value) {
+          node.next = node.next.next;
+          this.decrease();
+          return;
+        }
+        node = node.next;
+      }
+      console.error("존재하지 않는 값이에요.");
+      return -1;
     }
-    // 그 외의 경우라면 Error, 이건 로직상의 문제니 throw
-    throw new Error("노드를 추가하는 곳에서 에러가 발생했어요.");
   }
 
   insert(node, newValue) {
-    //if (!node) throw new Error("해당하는 노드를 찾을 수 없어요.");
-    if (!node) return false;
+    if (!node || node < 0) {
+      console.error("존재하지 않는 노드에요");
+      return -1;
+    }
+
     const newNode = new Node(newValue);
     newNode.next = node.next;
     node.next = newNode;
     this.increase();
-    return true;
-  }
-
-  remove(value) {
-    // 여기서 size까지 사용하는 것이 좋은지?
-    if (this.head === null && this.size === 0) {
-      //throw new Error("노드가 이미 비어있어서 제거할 노드가 없어요.");
-      return false;
-    }
-
-    let prevNode = this.head;
-
-    while (prevNode.next && prevNode.next.value !== value) {
-      prevNode = prevNode.next;
-    }
-
-    if (prevNode && prevNode.next) {
-      prevNode.next = prevNode.next.next;
-      this.decrease();
-      return true;
-    }
-
-    //throw new Error("해당하는 값을 가지는 노드가 없어요.");
-    return false;
   }
 }
 
